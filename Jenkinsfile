@@ -1,34 +1,11 @@
 pipeline {
     agent any
 
-    environment {
-        REPO_URL = 'https://github.com/Abhi-BN30/PES1UG22CS012_Jenkins.git'  // Replace with your repository URL
-        BRANCH = 'main' // Change as needed
-        CPP_FILE = 'hello1.cpp'
-        EXECUTABLE = 'PES1UG22CS012'
-    }
-
     stages {
-        stage('Clone Repository') {
-            steps {
-                script {
-                    sh 'git clone $REPO_URL repo && cd repo && git checkout $BRANCH'
-                }
-            }
-        }
-
-        stage('Create .cpp File') {
-            steps {
-                script {
-                    sh "echo '#include <iostream>\\nusing namespace std;\\nint main() {\\n cout << \"Hello, Jenkins!\\" << endl;\\n return 0;\\n}' > repo/$CPP_FILE"
-                }
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
-                    sh 'cd repo && g++ $CPP_FILE -o $EXECUTABLE'
+                    sh 'g++ -o output hello1.cpp' // Compile the C++ file
                 }
             }
         }
@@ -36,30 +13,21 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh 'cd repo && ./$EXECUTABLE'
+                    sh './output' // Run the compiled executable
                 }
             }
         }
 
-        stage('Push to Repository') {
+        stage('Deploy') {
             steps {
-                script {
-                    sh '''
-                        cd repo
-                        git config --global user.email "your-email@example.com"
-                        git config --global user.name "your-name"
-                        git add $CPP_FILE
-                        git commit -m "Added new .cpp file"
-                        git push origin $BRANCH
-                    '''
-                }
+                echo 'Deploying the application...' // Modify this step based on deployment needs
             }
         }
     }
 
     post {
         failure {
-            echo 'Pipeline failed'
+            echo 'Pipeline failed!'
         }
     }
 }
