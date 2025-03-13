@@ -13,7 +13,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh './output' // Run the compiled executable
+                    sh './non_existing_file' // Intentional error: file does not exist
                 }
             }
         }
